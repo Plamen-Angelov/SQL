@@ -60,11 +60,11 @@ BEGIN
 	DECLARE @salaryLevel varchar(7)
 
 	IF(@salary < 30000)
-	SET @salaryLevel = 'Low'
+		SET @salaryLevel = 'Low'
 	ELSE IF(@salary <= 50000)
-	SET @salaryLevel = 'Average'
+		SET @salaryLevel = 'Average'
 	ELSE
-	SET @salaryLevel = 'High'
+		SET @salaryLevel = 'High'
 
 	RETURN @salaryLevel
 END
@@ -150,9 +150,9 @@ AS
 EXEC usp_DeleteEmployeesFromDepartment 3
 
 -------
-GO
+
 use Bank
-GO
+
 
 -- Task 9
 
@@ -168,13 +168,13 @@ EXEC usp_GetHoldersFullName
 
 CREATE PROC usp_GetHoldersWithBalanceHigherThan (@amount decimal)
 AS
-SELECT h.FirstName,
-		h.LastName
-FROM AccountHolders AS h
-JOIN Accounts AS a ON h.Id = a.AccountHolderId
-GROUP BY h.FirstName, h.LastName
-HAVING SUM(a.Balance) > @amount
-ORDER BY FirstName, LastName
+	  SELECT h.FirstName,
+			 h.LastName
+	    FROM AccountHolders AS h
+	    JOIN Accounts AS a ON h.Id = a.AccountHolderId
+	GROUP BY h.FirstName, h.LastName
+	  HAVING SUM(a.Balance) > @amount
+	ORDER BY FirstName, LastName
 
 
 --Task 11
@@ -183,7 +183,7 @@ CREATE FUNCTION ufn_CalculateFutureValue (@sum decimal, @interest float, @years 
 RETURNS decimal(18, 4)
 AS
 BEGIN
-RETURN @sum*(POWER((1 + @interest), @years))
+	RETURN @sum*(POWER((1 + @interest), @years))
 END
 
 SELECT dbo.ufn_CalculateFutureValue(1000, 0.1, 5)
@@ -193,14 +193,14 @@ SELECT dbo.ufn_CalculateFutureValue(1000, 0.1, 5)
 
 CREATE PROC usp_CalculateFutureValueForAccount (@accountID int, @interest float)
 AS
-SELECT a.Id AS [Account Id]
-	   ,FirstName
-	   ,LastName
-	   ,Balance AS [Current Balance]
-	   ,dbo.ufn_CalculateFutureValue(Balance, @interest, 5) AS [Balance in 5 years]
-FROM AccountHolders AS h
-JOIN Accounts AS a ON h.Id = a.AccountHolderId
-WHERE a.Id = @accountID
+   SELECT a.Id AS [Account Id]
+	      ,FirstName
+	      ,LastName
+	      ,Balance AS [Current Balance]
+	      ,dbo.ufn_CalculateFutureValue(Balance, @interest, 5) AS [Balance in 5 years]
+	 FROM AccountHolders AS h
+	 JOIN Accounts AS a ON h.Id = a.AccountHolderId
+	WHERE a.Id = @accountID
 
 EXEC usp_CalculateFutureValueForAccount 1, 0.1
 
@@ -221,7 +221,7 @@ RETURN(SELECT SUM(Cash) AS SumCash
 				 FROM UsersGames AS ug
 				 JOIN Games AS g ON ug.GameId = g.Id
 				WHERE g.[Name] = @gameName) AS RankTable
-		WHERE [Rank] % 2 = 1
+		WHERE [Rank] % 2 <> 0
 	   )
 
 SELECT * FROM dbo.ufn_CashInUsersGames ('Love in a mist')
